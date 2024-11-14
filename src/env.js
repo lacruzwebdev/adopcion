@@ -15,6 +15,11 @@ export const env = createEnv({
     EMAIL_SERVER: z.string(),
     EMAIL_FROM: z.string(),
     DATABASE_URL: z.string().url(),
+    S3_ENDPOINT: z.string(),
+    S3_PORT: z.coerce.number(),
+    S3_USE_SSL: z.string(),
+    S3_ACCESS_KEY: z.string(),
+    S3_SECRET_KEY: z.string(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -26,7 +31,7 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_S3_URL: z.string().url(),
   },
 
   /**
@@ -39,6 +44,12 @@ export const env = createEnv({
     EMAIL_SERVER: process.env.EMAIL_SERVER,
     EMAIL_FROM: process.env.EMAIL_FROM,
     DATABASE_URL: process.env.DATABASE_URL,
+    NEXT_PUBLIC_S3_URL: process.env.NEXT_PUBLIC_S3_URL,
+    S3_ENDPOINT: process.env.S3_ENDPOINT,
+    S3_PORT: process.env.S3_PORT,
+    S3_USE_SSL: process.env.S3_USE_SSL,
+    S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,
+    S3_SECRET_KEY: process.env.S3_SECRET_KEY,
     NODE_ENV: process.env.NODE_ENV,
   },
   /**

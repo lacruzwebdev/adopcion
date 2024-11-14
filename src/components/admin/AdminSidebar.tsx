@@ -11,8 +11,12 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 import { User } from "react-feather";
+import { auth } from "@/server/auth";
+import { isSuperAdmin } from "@/lib/authUtils";
 
-export default function AdminSidebar() {
+export default async function AdminSidebar() {
+  const user = (await auth())?.user;
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -23,6 +27,16 @@ export default function AdminSidebar() {
           <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
+              {user && isSuperAdmin(user) && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link href="/admin/admins">
+                      <User />
+                      Admins
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link href="/admin/users">

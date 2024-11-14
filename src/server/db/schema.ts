@@ -16,11 +16,21 @@ import { type AdapterAccount } from "next-auth/adapters";
  */
 export const createTable = sqliteTableCreator((name) => `adoption_${name}`);
 
-export const posts = createTable(
-  "post",
+export const animals = createTable(
+  "animals",
   {
-    id: int("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+    id: int("id", { mode: "number" })
+      .notNull()
+      .primaryKey({ autoIncrement: true }),
     name: text("name", { length: 256 }),
+    species: text("species", { length: 256 }),
+    age: int("age"),
+    description: text("description", { length: 1024 }),
+    mainImage: text("main_image", { length: 256 }),
+    gallery: text("gallery", { mode: "json" })
+      .notNull()
+      .$type<string[]>()
+      .default(sql`(json_array())`),
     createdById: text("created_by", { length: 255 })
       .notNull()
       .references(() => users.id),
@@ -43,16 +53,38 @@ export const users = createTable("user", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name", { length: 255 }),
-  email: text("email", { length: 255 }).notNull(),
+  email: text("email", { length: 255 }).unique().notNull(),
   emailVerified: int("email_verified", {
     mode: "timestamp",
   }).default(sql`(unixepoch())`),
-  role: text("role", { enum: ["user", "admin"] }),
+  role: text("role", { enum: ["user", "admin", "superadmin"] }).notNull(),
   image: text("image", { length: 255 }),
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`(current_timestamp)`),
+});
+
+export const profiles = createTable("profiles", {
+  id: text("id", { length: 255 })
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id", { length: 255 })
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  title: text("title", { length: 255 }),
+  slug: text("slug", { length: 255 }),
+  bio: text("bio", { length: 255 }),
+  location: text("location", { length: 255 }),
+  website: text("website", { length: 255 }),
+  twitter: text("twitter", { length: 255 }),
+  instagram: text("instagram", { length: 255 }),
+  description: text("description", { length: 255 }),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
+  // profiles: one(profiles),
 }));
 
 export const accounts = createTable(

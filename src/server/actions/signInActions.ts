@@ -1,9 +1,8 @@
 "use server";
 
-import { signInSchema } from "@/lib/signInSchema";
+import { signInSchema } from "@/lib/formSchemas";
 import type { z } from "zod";
-import { signIn } from "./auth";
-import { redirect } from "next/navigation";
+import { signIn } from "../auth";
 import { AuthError } from "next-auth";
 
 export async function signInOnSubmitAction(data: z.infer<typeof signInSchema>) {

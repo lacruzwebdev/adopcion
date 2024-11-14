@@ -1,1 +1,0 @@
-type UserRole = "admin" | "user";

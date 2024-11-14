@@ -10,7 +10,7 @@ export default async function SignInPage() {
     redirect("/");
   }
   return (
-    <main className="bg-white dark:bg-gray-900">
+    <main className="bg-white">
       <div className="relative md:flex">
         {/* Content */}
         <div className="md:w-1/2">

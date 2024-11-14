@@ -1,6 +1,7 @@
 import AdminNavbar from "@/components/admin/AdminNavbar";
 import AdminSidebar from "@/components/admin/AdminSidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 import { auth } from "@/server/auth";
 import { redirect } from "next/navigation";
 
@@ -10,7 +11,9 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  if (session?.user.role !== "admin") redirect("/");
+  if (session?.user.role !== "admin" && session?.user.role !== "superadmin") {
+    redirect("/");
+  }
   return (
     <SidebarProvider>
       <AdminSidebar />
@@ -18,8 +21,9 @@ export default async function AdminLayout({
         <header>
           <AdminNavbar user={session.user} />
         </header>
-        <main className="p-4">{children}</main>
+        <main className="p-4 sm:px-6">{children}</main>
       </div>
+      <Toaster />
     </SidebarProvider>
   );
 }
